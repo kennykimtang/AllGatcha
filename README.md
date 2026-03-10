@@ -48,3 +48,15 @@ npm start
    - Publish directory: leave default (Netlify uses Next.js plugin)
 
 5. Click **Deploy site**. When the build finishes, open the site URL to test.
+
+## Deploy to GitHub Pages (this repo)
+
+1. Push to `main` — the **Deploy to GitHub Pages** workflow runs and publishes the built site to the `gh-pages` branch.
+
+2. **Turn on GitHub Pages** (once per repo):
+   - Repo → **Settings** → **Pages**.
+   - Under **Source**, choose **Deploy from a branch**.
+   - **Branch**: `gh-pages` → **Folder**: `/ (root)` → **Save**.
+
+3. After a minute or two, the site is at:  
+   **https://kennykimtang.github.io/AllGatcha/**
