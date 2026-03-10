@@ -28,3 +28,23 @@ Draw random Wikipedia pages as collectible cards. MVP: no auth, cards saved in l
 npm run build
 npm start
 ```
+
+## Deploy to Netlify (Git)
+
+1. **Create a new repo on GitHub** (e.g. `internet-card`). Do **not** initialize with README (project already has one).
+
+2. **Push this project** from the project folder:
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/internet-card.git
+   git branch -M main
+   git push -u origin main
+   ```
+   Replace `YOUR_USERNAME` and `internet-card` with your GitHub username and repo name.
+
+3. **In Netlify:** Add new site → **Import from Git** → choose **GitHub** → select the repo.
+
+4. **Build settings** (usually auto-detected for Next.js):
+   - Build command: `npm run build`
+   - Publish directory: leave default (Netlify uses Next.js plugin)
+
+5. Click **Deploy site**. When the build finishes, open the site URL to test.
