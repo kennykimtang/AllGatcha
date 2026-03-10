@@ -25,7 +25,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
         {showImage && (
           <figure className="relative mb-4 h-48 overflow-hidden rounded-lg">
             <Image
-              src={card.image}
+              src={card.image as string}
               alt=""
               fill
               className="object-cover"
