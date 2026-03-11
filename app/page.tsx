@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Card } from "@/components/Card";
 import { DrawButton } from "@/components/DrawButton";
+import { Header } from "@/components/Header";
 import { useI18n } from "@/components/I18nProvider";
-import { trackButton, trackCardShown, trackView } from "@/lib/analytics";
+import { trackCardShown, trackView } from "@/lib/analytics";
 import {
   fetchRandomCard,
   saveCard,
@@ -41,32 +41,31 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8 p-6">
-      <nav className="absolute top-6 right-6">
-        <Link
-          href="/collection"
-          className="text-zinc-400 underline-offset-4 hover:text-zinc-200 hover:underline"
-          onClick={() => trackButton("button_nav_collection")}
-        >
-          {t("collection")}
-        </Link>
-      </nav>
-      {!currentCard && !loading && (
-        <DrawButton onClick={handleDraw} disabled={loading} isAgain={false} />
-      )}
-      {loading && (
-        <DrawButton onClick={() => {}} disabled isAgain={false} />
-      )}
-      {currentCard && !loading && (
-        <>
-          <Card
-            card={currentCard}
-            onKeep={handleKeep}
-            onDrawAgain={handleDraw}
-          />
-          <DrawButton onClick={handleDraw} disabled={loading} isAgain />
-        </>
-      )}
-    </main>
+    <>
+      <Header />
+      <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 pt-24 pb-12">
+        {!currentCard && !loading && (
+          <div className="flex flex-col items-center gap-6">
+            <p className="max-w-sm text-center text-zinc-400">
+              {t("intro")}
+            </p>
+            <DrawButton onClick={handleDraw} disabled={loading} isAgain={false} />
+          </div>
+        )}
+        {loading && (
+          <DrawButton onClick={() => {}} disabled isAgain={false} />
+        )}
+        {currentCard && !loading && (
+          <>
+            <Card
+              card={currentCard}
+              onKeep={handleKeep}
+              onDrawAgain={handleDraw}
+            />
+            <DrawButton onClick={handleDraw} disabled={loading} isAgain />
+          </>
+        )}
+      </main>
+    </>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Header } from "@/components/Header";
 import { useI18n } from "@/components/I18nProvider";
 import { trackButton, trackView } from "@/lib/analytics";
 import { getSavedCards, type WikiCard } from "@/lib/wikipedia";
@@ -40,19 +41,43 @@ export default function CollectionPage() {
   }, []);
 
   return (
-    <main className="min-h-screen p-8">
-      <header className="mb-8 flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-zinc-400 underline-offset-4 hover:text-zinc-200 hover:underline"
-          onClick={() => trackButton("button_nav_home")}
-        >
-          {t("home")}
-        </Link>
-        <h1 className="text-2xl font-bold text-zinc-100">{t("collection")}</h1>
-      </header>
+    <>
+      <Header />
+      <main className="min-h-screen px-6 pt-24 pb-12">
+        <h1 className="mb-8 text-2xl font-bold tracking-tight text-zinc-100">
+          {t("collection")}
+        </h1>
       {cards.length === 0 ? (
-        <p className="text-center text-zinc-500">{t("noCardsSaved")}</p>
+        <div className="flex flex-col items-center justify-center gap-6 py-16">
+          <div
+            className="flex h-24 w-24 items-center justify-center rounded-2xl bg-zinc-800/80 text-zinc-500"
+            aria-hidden
+          >
+            <svg
+              className="h-12 w-12"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+          </div>
+          <p className="max-w-sm text-center text-zinc-400">
+            {t("noCardsSaved")}
+          </p>
+          <Link
+            href="/"
+            className="rounded-xl bg-amber-500 px-6 py-3 font-medium text-zinc-950 transition hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-zinc-950"
+            onClick={() => trackButton("button_nav_home")}
+          >
+            {t("goDraw")}
+          </Link>
+        </div>
       ) : (
         <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => (
@@ -61,7 +86,7 @@ export default function CollectionPage() {
                 href={card.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block overflow-hidden rounded-xl border border-zinc-700 bg-zinc-900 transition hover:border-zinc-600"
+                className="block cursor-pointer overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900/95 shadow-lg ring-1 ring-zinc-800/50 transition hover:-translate-y-1 hover:border-zinc-600 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-zinc-950"
                 onClick={() =>
                   trackButton("button_open_card", {
                     source: card.source ?? "wiki",
@@ -69,8 +94,10 @@ export default function CollectionPage() {
                   })
                 }
               >
-                <CardThumbnail card={card} />
-                <p className="p-4 font-medium text-zinc-200 line-clamp-2">
+                <div className="overflow-hidden rounded-t-xl">
+                  <CardThumbnail card={card} />
+                </div>
+                <p className="p-4 font-medium leading-snug text-zinc-200 line-clamp-2">
                   {card.title}
                 </p>
               </a>
@@ -78,6 +105,7 @@ export default function CollectionPage() {
           ))}
         </ul>
       )}
-    </main>
+      </main>
+    </>
   );
 }

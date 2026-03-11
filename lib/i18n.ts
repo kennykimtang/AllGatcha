@@ -11,6 +11,10 @@ export const translations = {
     drawAgain: "DRAW AGAIN",
     home: "← Home",
     noCardsSaved: "No cards saved yet.",
+    intro: "Press the button to get a random card. Keep the ones you like.",
+    goDraw: "Draw a card",
+    sourceWiki: "Wikipedia",
+    sourceWebsite: "Website",
   },
   ko: {
     draw: "뽑기",
@@ -22,6 +26,10 @@ export const translations = {
     drawAgain: "다시 뽑기",
     home: "← 홈",
     noCardsSaved: "저장된 카드가 없습니다.",
+    intro: "버튼을 눌러 랜덤 카드를 뽑아보세요. 마음에 드는 건 보관하세요.",
+    goDraw: "카드 뽑기",
+    sourceWiki: "위키백과",
+    sourceWebsite: "웹사이트",
   },
 } as const;
 

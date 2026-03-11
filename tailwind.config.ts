@@ -7,7 +7,16 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", "Pretendard", "system-ui", "sans-serif"],
+      },
+      colors: {
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        keep: "rgb(var(--color-keep) / <alpha-value>)",
+        link: "rgb(var(--color-link) / <alpha-value>)",
+      },
+    },
   },
   plugins: [],
 };
