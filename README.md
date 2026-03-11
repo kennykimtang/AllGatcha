@@ -27,23 +27,15 @@ npm start
 
 ## Deploy to Netlify (Git)
 
-1. **Create a new repo on GitHub** (e.g. `internet-card`). Do **not** initialize with README (project already has one).
+1. Push this repo to GitHub (e.g. `kennykimtang/AllGatcha`).
 
-2. **Push this project** from the project folder:
-   ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/internet-card.git
-   git branch -M main
-   git push -u origin main
-   ```
-   Replace `YOUR_USERNAME` and `internet-card` with your GitHub username and repo name.
+2. **In Netlify:** [app.netlify.com](https://app.netlify.com) → **Add new site** → **Import an existing project** → **GitHub** → select **AllGatcha**.
 
-3. **In Netlify:** Add new site → **Import from Git** → choose **GitHub** → select the repo.
-
-4. **Build settings** (usually auto-detected for Next.js):
+3. **Build settings** (use repo’s `netlify.toml` or set manually):
    - Build command: `npm run build`
-   - Publish directory: leave default (Netlify uses Next.js plugin)
+   - Publish directory: `out`
 
-5. Click **Deploy site**. When the build finishes, open the site URL to test.
+4. **Deploy site**. The site will be at `https://<site-name>.netlify.app` (no `/AllGatcha` path).
 
 ## Deploy to GitHub Pages (this repo)
 

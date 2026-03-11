@@ -1,5 +1,4 @@
-# Netlify build config for Next.js
-# Framework is auto-detected; build output is handled by @netlify/plugin-nextjs
-
+# Netlify: static export (output: "export") — no basePath
 [build]
   command = "npm run build"
+  publish = "out"
