@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/Card";
 import { DrawButton } from "@/components/DrawButton";
 import { useI18n } from "@/components/I18nProvider";
+import { trackButton, trackCardShown, trackView } from "@/lib/analytics";
 import {
   fetchRandomCard,
   saveCard,
@@ -16,11 +17,16 @@ export default function HomePage() {
   const [currentCard, setCurrentCard] = useState<WikiCard | null>(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    trackView("home");
+  }, []);
+
   const handleDraw = async () => {
     setLoading(true);
     try {
       const card = await fetchRandomCard(locale);
       setCurrentCard(card);
+      trackCardShown(card.source ?? "wiki", card.title);
     } catch {
       setCurrentCard(null);
     } finally {
@@ -40,15 +46,16 @@ export default function HomePage() {
         <Link
           href="/collection"
           className="text-zinc-400 underline-offset-4 hover:text-zinc-200 hover:underline"
+          onClick={() => trackButton("button_nav_collection")}
         >
           {t("collection")}
         </Link>
       </nav>
       {!currentCard && !loading && (
-        <DrawButton onClick={handleDraw} disabled={loading} />
+        <DrawButton onClick={handleDraw} disabled={loading} isAgain={false} />
       )}
       {loading && (
-        <DrawButton onClick={() => {}} disabled />
+        <DrawButton onClick={() => {}} disabled isAgain={false} />
       )}
       {currentCard && !loading && (
         <>
@@ -57,7 +64,7 @@ export default function HomePage() {
             onKeep={handleKeep}
             onDrawAgain={handleDraw}
           />
-          <DrawButton onClick={handleDraw} disabled={loading} />
+          <DrawButton onClick={handleDraw} disabled={loading} isAgain />
         </>
       )}
     </main>

@@ -9,13 +9,9 @@ Draw random Wikipedia pages as collectible cards. MVP: no auth, cards saved in l
    npm install
    ```
 
-2. Start the dev server (always on **http://127.0.0.1:3010**):
+2. Start the dev server at **http://127.0.0.1:3010** (automatically frees port 3010 if in use):
    ```bash
    npm run dev
-   ```
-   If you see "address already in use" or **HTTP 500**, run this instead (frees port 3010 and starts the server):
-   ```bash
-   npm run dev:fresh
    ```
 
 3. Open **http://127.0.0.1:3010** in your browser.

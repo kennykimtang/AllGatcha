@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/components/I18nProvider";
+import { trackButton, trackView } from "@/lib/analytics";
 import { getSavedCards, type WikiCard } from "@/lib/wikipedia";
 
 function CardThumbnail({ card }: { card: WikiCard }) {
@@ -34,12 +35,17 @@ export default function CollectionPage() {
     setCards(getSavedCards());
   }, []);
 
+  useEffect(() => {
+    trackView("collection");
+  }, []);
+
   return (
     <main className="min-h-screen p-8">
       <header className="mb-8 flex items-center justify-between">
         <Link
           href="/"
           className="text-zinc-400 underline-offset-4 hover:text-zinc-200 hover:underline"
+          onClick={() => trackButton("button_nav_home")}
         >
           {t("home")}
         </Link>
@@ -56,6 +62,12 @@ export default function CollectionPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block overflow-hidden rounded-xl border border-zinc-700 bg-zinc-900 transition hover:border-zinc-600"
+                onClick={() =>
+                  trackButton("button_open_card", {
+                    source: card.source ?? "wiki",
+                    card_title: card.title,
+                  })
+                }
               >
                 <CardThumbnail card={card} />
                 <p className="p-4 font-medium text-zinc-200 line-clamp-2">

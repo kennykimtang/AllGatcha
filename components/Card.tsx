@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useI18n } from "@/components/I18nProvider";
+import { trackButton } from "@/lib/analytics";
 import type { WikiCard } from "@/lib/wikipedia";
 
 interface CardProps {
@@ -15,6 +16,24 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
   const { t } = useI18n();
   const [imageError, setImageError] = useState(false);
   const showImage = card.image && !imageError;
+  const handleKeep = () => {
+    trackButton("button_keep", {
+      card_source: card.source ?? "wiki",
+      card_title: card.title,
+    });
+    onKeep();
+  };
+  const handleOpenLink = () => {
+    if (card.source === "website") {
+      trackButton("button_open_website", { url: card.url });
+    } else {
+      trackButton("button_open_article", { url: card.url });
+    }
+  };
+  const handleDrawAgain = () => {
+    trackButton("button_draw_again");
+    onDrawAgain();
+  };
   return (
     <article
       className="animate-card-appear w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900 shadow-xl"
@@ -38,7 +57,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            onClick={onKeep}
+            onClick={handleKeep}
             className="rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white transition hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
           >
             {t("keep")}
@@ -48,6 +67,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 font-medium text-zinc-200 transition hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            onClick={handleOpenLink}
           >
             {card.source === "website"
               ? t("openWebsite")
@@ -55,7 +75,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
           </a>
           <button
             type="button"
-            onClick={onDrawAgain}
+            onClick={handleDrawAgain}
             className="rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 font-medium text-zinc-200 transition hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
           >
             {t("drawAgain")}
