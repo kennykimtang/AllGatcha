@@ -22,10 +22,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={notoSansKr.variable}>
-      <body className="min-h-screen bg-[#09090b] text-zinc-100 antialiased font-sans bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
-        <MixpanelProvider>
-          <I18nProvider>{children}</I18nProvider>
-        </MixpanelProvider>
+      <body className="min-h-screen bg-gradient-diagonal bg-noise text-zinc-100 antialiased font-sans">
+        <svg aria-hidden="true" className="absolute size-0 overflow-hidden" focusable="false">
+          <defs>
+            <filter id="noiseFilter" x="0" y="0">
+              <feTurbulence baseFrequency="0.8" numOctaves="4" type="fractalNoise" result="noise" />
+              <feColorMatrix in="noise" type="saturate" values="0" result="mono" />
+              <feBlend in="SourceGraphic" in2="mono" mode="overlay" />
+            </filter>
+          </defs>
+        </svg>
+        <div className="relative z-10 min-h-screen">
+          <MixpanelProvider>
+            <I18nProvider>{children}</I18nProvider>
+          </MixpanelProvider>
+        </div>
       </body>
     </html>
   );

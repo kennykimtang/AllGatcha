@@ -7,9 +7,34 @@
   --color-primary: 250 204 21; /* amber-400 */
   --color-keep: 34 197 94; /* emerald-500 */
   --color-link: 94 234 212; /* teal-300 */
-  --bg-base: 9 9 11; /* zinc-950 */
-  --bg-muted: 24 24 27; /* zinc-900 */
-  --border-muted: 63 63 70; /* zinc-700 */
+  /* Background gradient: top-right (lighter slate) → bottom-left (dark charcoal) */
+  --gradient-start: 51 65 85; /* slate-700 */
+  --gradient-end: 15 23 42; /* slate-900 */
+  --bg-base: 15 23 42; /* slate-900 */
+  --bg-muted: 30 41 59; /* slate-800 */
+  --border-muted: 51 65 85; /* slate-700 */
+  --ring-offset: 15 23 42; /* slate-900, for focus rings */
+}
+
+/* Diagonal gradient background (135deg: light top-right → dark bottom-left) */
+.bg-gradient-diagonal {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--gradient-start)) 0%,
+    rgb(var(--gradient-end)) 100%
+  );
+}
+
+/* High-quality noise overlay: fixed layer, non-interactive, subtle grain */
+.bg-noise::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #fff;
+  opacity: 0.04;
+  filter: url(#noiseFilter);
 }
 
 @keyframes card-appear {

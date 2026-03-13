@@ -12,7 +12,7 @@ function CardThumbnail({ card }: { card: WikiCard }) {
   const [imageError, setImageError] = useState(false);
   const showImage = card.image && !imageError;
   if (!showImage) {
-    return <div className="h-40 w-full bg-zinc-800" />;
+    return <div className="h-40 w-full bg-slate-700" />;
   }
   return (
     <div className="relative h-40 w-full">
@@ -50,7 +50,7 @@ export default function CollectionPage() {
       {cards.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-6 py-16">
           <div
-            className="flex h-24 w-24 items-center justify-center rounded-2xl bg-zinc-800/80 text-zinc-500"
+            className="flex h-24 w-24 items-center justify-center rounded-2xl bg-slate-700/70 text-slate-400"
             aria-hidden
           >
             <svg
@@ -67,12 +67,12 @@ export default function CollectionPage() {
               />
             </svg>
           </div>
-          <p className="max-w-sm text-center text-zinc-400">
+          <p className="max-w-sm text-center text-slate-400">
             {t("noCardsSaved")}
           </p>
           <Link
             href="/"
-            className="rounded-xl bg-amber-500 px-6 py-3 font-medium text-zinc-950 transition hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-zinc-950"
+            className="rounded-xl bg-amber-500 px-6 py-3 font-medium text-zinc-950 transition hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-900"
             onClick={() => trackButton("button_nav_home")}
           >
             {t("goDraw")}
@@ -86,7 +86,7 @@ export default function CollectionPage() {
                 href={card.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block cursor-pointer overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900/95 shadow-lg ring-1 ring-zinc-800/50 transition hover:-translate-y-1 hover:border-zinc-600 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-zinc-950"
+                className="block cursor-pointer overflow-hidden rounded-xl border border-slate-600/50 bg-slate-800/90 shadow-md ring-1 ring-slate-700/30 transition hover:-translate-y-1 hover:border-slate-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-slate-900"
                 onClick={() =>
                   trackButton("button_open_card", {
                     source: card.source ?? "wiki",
@@ -97,7 +97,7 @@ export default function CollectionPage() {
                 <div className="overflow-hidden rounded-t-xl">
                   <CardThumbnail card={card} />
                 </div>
-                <p className="p-4 font-medium leading-snug text-zinc-200 line-clamp-2">
+                <p className="p-4 font-medium leading-snug text-slate-200 line-clamp-2">
                   {card.title}
                 </p>
               </a>
