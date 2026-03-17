@@ -9,6 +9,7 @@ import { trackCardShown, trackView } from "@/lib/analytics";
 import {
   fetchRandomCard,
   saveCard,
+  type SaveCardResult,
   type WikiCard,
 } from "@/lib/wikipedia";
 
@@ -16,6 +17,7 @@ export default function HomePage() {
   const { t, locale } = useI18n();
   const [currentCard, setCurrentCard] = useState<WikiCard | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saveResult, setSaveResult] = useState<SaveCardResult | null>(null);
 
   useEffect(() => {
     trackView("home");
@@ -23,6 +25,7 @@ export default function HomePage() {
 
   const handleDraw = async () => {
     setLoading(true);
+    setSaveResult(null);
     try {
       const card = await fetchRandomCard(locale);
       setCurrentCard(card);
@@ -36,7 +39,8 @@ export default function HomePage() {
 
   const handleKeep = () => {
     if (currentCard) {
-      saveCard(currentCard);
+      const result = saveCard(currentCard);
+      setSaveResult(result);
     }
   };
 
@@ -62,6 +66,15 @@ export default function HomePage() {
               onKeep={handleKeep}
               onDrawAgain={handleDraw}
             />
+            {saveResult && (
+              <p className="text-sm text-slate-300/90">
+                {saveResult === "saved"
+                  ? t("savedToCollection")
+                  : saveResult === "duplicate"
+                    ? t("alreadyInCollection")
+                    : t("saveFailed")}
+              </p>
+            )}
             <DrawButton onClick={handleDraw} disabled={loading} isAgain />
           </>
         )}

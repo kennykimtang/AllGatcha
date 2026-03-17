@@ -15,6 +15,13 @@ export const translations = {
     goDraw: "Draw a card",
     sourceWiki: "Wikipedia",
     sourceWebsite: "Website",
+    savedToCollection: "Saved to collection.",
+    alreadyInCollection: "Already in your collection.",
+    saveFailed: "Could not save. Try again.",
+    filterAll: "All",
+    sortRecent: "Recent",
+    sortOldest: "Oldest",
+    sortTitle: "Title",
   },
   ko: {
     draw: "뽑기",
@@ -30,6 +37,13 @@ export const translations = {
     goDraw: "카드 뽑기",
     sourceWiki: "위키백과",
     sourceWebsite: "웹사이트",
+    savedToCollection: "컬렉션에 저장했어요.",
+    alreadyInCollection: "이미 컬렉션에 있어요.",
+    saveFailed: "저장에 실패했어요. 다시 시도해 주세요.",
+    filterAll: "전체",
+    sortRecent: "최신순",
+    sortOldest: "오래된순",
+    sortTitle: "제목순",
   },
 } as const;
 

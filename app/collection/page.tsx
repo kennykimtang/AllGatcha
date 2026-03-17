@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
@@ -31,6 +31,12 @@ function CardThumbnail({ card }: { card: WikiCard }) {
 export default function CollectionPage() {
   const { t } = useI18n();
   const [cards, setCards] = useState<WikiCard[]>([]);
+  const [sourceFilter, setSourceFilter] = useState<"all" | "wiki" | "website">(
+    "all"
+  );
+  const [sortKey, setSortKey] = useState<"recent" | "oldest" | "title">(
+    "recent"
+  );
 
   useEffect(() => {
     setCards(getSavedCards());
@@ -40,13 +46,88 @@ export default function CollectionPage() {
     trackView("collection");
   }, []);
 
+  const visibleCards = useMemo(() => {
+    const filtered =
+      sourceFilter === "all"
+        ? cards
+        : cards.filter((c) => (c.source ?? "wiki") === sourceFilter);
+
+    const sorted = [...filtered];
+    sorted.sort((a, b) => {
+      if (sortKey === "title") {
+        return a.title.localeCompare(b.title);
+      }
+      if (sortKey === "oldest") {
+        return a.timestamp - b.timestamp;
+      }
+      return b.timestamp - a.timestamp;
+    });
+    return sorted;
+  }, [cards, sourceFilter, sortKey]);
+
   return (
     <>
       <Header />
       <main className="min-h-screen px-6 pt-24 pb-12">
-        <h1 className="mb-8 text-2xl font-bold tracking-tight text-zinc-100">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-100">
           {t("collection")}
-        </h1>
+          </h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="inline-flex overflow-hidden rounded-lg border border-slate-600/50 bg-slate-800/70">
+              <button
+                type="button"
+                onClick={() => setSourceFilter("all")}
+                className={[
+                  "px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-slate-900",
+                  sourceFilter === "all"
+                    ? "bg-slate-700/60 text-zinc-100"
+                    : "text-slate-300 hover:bg-slate-700/40 hover:text-zinc-100",
+                ].join(" ")}
+              >
+                {t("filterAll")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSourceFilter("wiki")}
+                className={[
+                  "px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-slate-900",
+                  sourceFilter === "wiki"
+                    ? "bg-slate-700/60 text-zinc-100"
+                    : "text-slate-300 hover:bg-slate-700/40 hover:text-zinc-100",
+                ].join(" ")}
+              >
+                {t("sourceWiki")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSourceFilter("website")}
+                className={[
+                  "px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-slate-900",
+                  sourceFilter === "website"
+                    ? "bg-slate-700/60 text-zinc-100"
+                    : "text-slate-300 hover:bg-slate-700/40 hover:text-zinc-100",
+                ].join(" ")}
+              >
+                {t("sourceWebsite")}
+              </button>
+            </div>
+
+            <select
+              value={sortKey}
+              onChange={(e) =>
+                setSortKey(e.target.value as "recent" | "oldest" | "title")
+              }
+              className="h-10 rounded-lg border border-slate-600/50 bg-slate-800/70 px-3 text-sm text-slate-200 outline-none transition focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+              aria-label="Sort"
+            >
+              <option value="recent">{t("sortRecent")}</option>
+              <option value="oldest">{t("sortOldest")}</option>
+              <option value="title">{t("sortTitle")}</option>
+            </select>
+          </div>
+        </div>
+
       {cards.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-6 py-16">
           <div
@@ -80,7 +161,7 @@ export default function CollectionPage() {
         </div>
       ) : (
         <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card) => (
+          {visibleCards.map((card) => (
             <li key={`${card.url}-${card.timestamp}`}>
               <a
                 href={card.url}

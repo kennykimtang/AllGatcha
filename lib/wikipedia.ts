@@ -7,6 +7,17 @@ const WIKI_SUMMARY_BASE: Record<Locale, string> = {
 
 export type CardSource = "wiki" | "website";
 
+export type CardCategory =
+  | "knowledge"
+  | "internet"
+  | "culture"
+  | "science"
+  | "history"
+  | "art"
+  | "misc";
+
+export type CardRarity = "common" | "rare" | "legendary";
+
 export interface WikiCard {
   title: string;
   summary: string;
@@ -14,6 +25,10 @@ export interface WikiCard {
   url: string;
   timestamp: number;
   source?: CardSource;
+  /** Minimal metadata for future use (kept mostly internal for now). */
+  category?: CardCategory;
+  rarity?: CardRarity;
+  language?: Locale;
 }
 
 interface WikiSummaryResponse {
@@ -25,7 +40,8 @@ interface WikiSummaryResponse {
 
 function parseSummaryResponse(
   data: WikiSummaryResponse,
-  wikiBase: string
+  wikiBase: string,
+  locale: Locale
 ): WikiCard {
   const baseUrl = wikiBase.replace("/api/rest_v1/page/summary", "");
   return {
@@ -37,6 +53,9 @@ function parseSummaryResponse(
       `${baseUrl}/wiki/${encodeURIComponent((data.title ?? "").replace(/ /g, "_"))}`,
     timestamp: Date.now(),
     source: "wiki",
+    language: locale,
+    category: "knowledge",
+    rarity: "common",
   };
 }
 
@@ -50,7 +69,7 @@ async function fetchSummaryByTitle(
   if (!res.ok) return null;
   const data: WikiSummaryResponse = await res.json();
   if (!data.extract) return null;
-  return parseSummaryResponse(data, base);
+  return parseSummaryResponse(data, base, locale);
 }
 
 export async function fetchRandomWikiPage(locale: Locale): Promise<WikiCard> {
@@ -91,9 +110,18 @@ export function getSavedCards(): WikiCard[] {
   }
 }
 
-export function saveCard(card: WikiCard): void {
-  if (typeof window === "undefined") return;
-  const cards = getSavedCards();
-  cards.push(card);
-  localStorage.setItem(SAVED_CARDS_KEY, JSON.stringify(cards));
+export type SaveCardResult = "saved" | "duplicate" | "error";
+
+export function saveCard(card: WikiCard): SaveCardResult {
+  if (typeof window === "undefined") return "error";
+  try {
+    const cards = getSavedCards();
+    const exists = cards.some((c) => c && typeof c === "object" && "url" in c && (c as WikiCard).url === card.url);
+    if (exists) return "duplicate";
+    cards.push(card);
+    localStorage.setItem(SAVED_CARDS_KEY, JSON.stringify(cards));
+    return "saved";
+  } catch {
+    return "error";
+  }
 }

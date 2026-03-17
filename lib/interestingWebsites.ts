@@ -1,4 +1,5 @@
 import type { Locale } from "./i18n";
+import type { CardCategory, CardRarity } from "./wikipedia";
 
 export interface WebsiteEntry {
   title: string;
@@ -65,6 +66,9 @@ export interface WebsiteCardShape {
   url: string;
   timestamp: number;
   source: "website";
+  category?: CardCategory;
+  rarity?: CardRarity;
+  language?: Locale;
 }
 
 /** Logo/thumbnail URL for a site. Uses Clearbit logo when available. */
@@ -91,5 +95,8 @@ export function getRandomWebsite(locale: Locale): WebsiteCardShape {
     url: entry.url,
     timestamp: Date.now(),
     source: "website",
+    language: locale,
+    category: "internet",
+    rarity: "common",
   };
 }

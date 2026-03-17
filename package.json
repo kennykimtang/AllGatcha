@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx kill-port 3010 2>/dev/null || true; npx next dev --turbopack --port 3010 --hostname 127.0.0.1",
-    "dev:fresh": "npx kill-port 3010 || true; npx next dev --turbopack --port 3010 --hostname 127.0.0.1",
+    "dev": "npx kill-port 3010 2>/dev/null || true; npx next dev --port 3010 --hostname 127.0.0.1",
+    "dev:turbo": "npx kill-port 3010 2>/dev/null || true; npx next dev --turbopack --port 3010 --hostname 127.0.0.1",
+    "dev:clean": "npx kill-port 3010 2>/dev/null || true; rm -rf .next; npx next dev --port 3010 --hostname 127.0.0.1",
     "build": "next build",
     "build:gh": "next build",
     "start": "next start",
