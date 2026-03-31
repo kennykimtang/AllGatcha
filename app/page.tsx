@@ -12,15 +12,22 @@ import {
   type SaveCardResult,
   type WikiCard,
 } from "@/lib/wikipedia";
+import { getSessionKeepCount, incrementSessionKeepCount } from "@/lib/sessionStats";
+import { incrementDailyDrawCount } from "@/lib/dailyDraws";
 
 export default function HomePage() {
   const { t, locale } = useI18n();
   const [currentCard, setCurrentCard] = useState<WikiCard | null>(null);
   const [loading, setLoading] = useState(false);
   const [saveResult, setSaveResult] = useState<SaveCardResult | null>(null);
+  const [sessionKeeps, setSessionKeeps] = useState(0);
 
   useEffect(() => {
     trackView("home");
+  }, []);
+
+  useEffect(() => {
+    setSessionKeeps(getSessionKeepCount());
   }, []);
 
   const handleDraw = async () => {
@@ -29,6 +36,7 @@ export default function HomePage() {
     try {
       const card = await fetchRandomCard(locale);
       setCurrentCard(card);
+      incrementDailyDrawCount();
       trackCardShown(card.source ?? "wiki", card.title);
     } catch {
       setCurrentCard(null);
@@ -41,6 +49,10 @@ export default function HomePage() {
     if (currentCard) {
       const result = saveCard(currentCard);
       setSaveResult(result);
+      if (result === "saved") {
+        const next = incrementSessionKeepCount();
+        setSessionKeeps(next);
+      }
     }
   };
 
@@ -50,9 +62,12 @@ export default function HomePage() {
       <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 pt-24 pb-12">
         {!currentCard && !loading && (
           <div className="flex flex-col items-center gap-6">
-            <p className="max-w-sm text-center text-zinc-400">
-              {t("intro")}
-            </p>
+            <div className="max-w-sm text-center">
+              <p className="mb-2 text-sm font-medium text-slate-200">
+                {t("intro")}
+              </p>
+              <p className="text-sm text-zinc-400">{t("introSub")}</p>
+            </div>
             <DrawButton onClick={handleDraw} disabled={loading} isAgain={false} />
           </div>
         )}
@@ -73,6 +88,13 @@ export default function HomePage() {
                   : saveResult === "duplicate"
                     ? t("alreadyInCollection")
                     : t("saveFailed")}
+              </p>
+            )}
+            {sessionKeeps > 0 && (
+              <p className="text-xs text-slate-400">
+                {t("sessionKeepPrefix")}
+                {sessionKeeps}
+                {t("sessionKeepSuffix")}
               </p>
             )}
             <DrawButton onClick={handleDraw} disabled={loading} isAgain />

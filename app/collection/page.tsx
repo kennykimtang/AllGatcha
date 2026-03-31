@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { useI18n } from "@/components/I18nProvider";
 import { trackButton, trackView } from "@/lib/analytics";
 import { getSavedCards, type WikiCard } from "@/lib/wikipedia";
+import { getSessionKeepCount } from "@/lib/sessionStats";
 
 function CardThumbnail({ card }: { card: WikiCard }) {
   const [imageError, setImageError] = useState(false);
@@ -37,6 +38,7 @@ export default function CollectionPage() {
   const [sortKey, setSortKey] = useState<"recent" | "oldest" | "title">(
     "recent"
   );
+  const [sessionKeeps, setSessionKeeps] = useState(0);
 
   useEffect(() => {
     setCards(getSavedCards());
@@ -44,6 +46,10 @@ export default function CollectionPage() {
 
   useEffect(() => {
     trackView("collection");
+  }, []);
+
+  useEffect(() => {
+    setSessionKeeps(getSessionKeepCount());
   }, []);
 
   const visibleCards = useMemo(() => {
@@ -70,9 +76,26 @@ export default function CollectionPage() {
       <Header />
       <main className="min-h-screen px-6 pt-24 pb-12">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-100">
-          {t("collection")}
-          </h1>
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-100">
+              {t("collection")}
+            </h1>
+            {cards.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                <span>{cards.length} cards</span>
+                {cards.filter(c => c.rarity === "rare").length > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-violet-900/60 px-2 py-0.5 text-violet-300 ring-1 ring-violet-400/20">
+                    ✦ {cards.filter(c => c.rarity === "rare").length} {t("collectionRare")}
+                  </span>
+                )}
+                {cards.filter(c => c.rarity === "legendary").length > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-900/60 px-2 py-0.5 text-amber-300 ring-1 ring-amber-400/20">
+                    ★ {cards.filter(c => c.rarity === "legendary").length} {t("collectionLegendary")}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
           <div className="flex flex-wrap items-center gap-3">
             <div className="inline-flex overflow-hidden rounded-lg border border-slate-600/50 bg-slate-800/70">
               <button
@@ -125,6 +148,13 @@ export default function CollectionPage() {
               <option value="oldest">{t("sortOldest")}</option>
               <option value="title">{t("sortTitle")}</option>
             </select>
+            {sessionKeeps > 0 && (
+              <p className="text-xs text-slate-400">
+                {t("sessionKeepPrefix")}
+                {sessionKeeps}
+                {t("sessionKeepSuffix")}
+              </p>
+            )}
           </div>
         </div>
 

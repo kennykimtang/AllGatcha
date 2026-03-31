@@ -46,7 +46,8 @@ export type ButtonEventName =
   | "button_draw_again"
   | "button_nav_collection"
   | "button_nav_home"
-  | "button_open_card";
+  | "button_open_card"
+  | "button_share";
 
 export function trackButton(
   name: ButtonEventName,
