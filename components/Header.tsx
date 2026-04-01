@@ -66,7 +66,7 @@ export function Header() {
           className="inline-flex items-center rounded-sm border border-white/20 bg-white/5 px-2.5 py-1 text-[11px] font-medium tracking-wide text-white/55 transition hover:border-white/40 hover:bg-white/10 hover:text-white/85 focus:outline-none"
           onClick={() => trackButton("button_support")}
         >
-          {locale === "ko" ? "커피 한 잔" : "buy me a coffee"}
+          {locale === "ko" ? "후원하기" : "buy me a coffee"}
         </a>
         {isCollection ? (
           <Link

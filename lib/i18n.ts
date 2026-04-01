@@ -91,7 +91,7 @@ export const translations = {
     collectionLegendary: "레전더리",
     rarityOdds: "일반 75% · 레어 20% · 레전더리 5%",
     supportDev: "뽑기는 무료, 커피는 개발자 몫.",
-    supportLabel: "커피 한 잔 사주기",
+    supportLabel: "후원하기",
   },
 } as const;
 
