@@ -9,11 +9,7 @@ interface DrawButtonProps {
   isAgain?: boolean;
 }
 
-export function DrawButton({
-  onClick,
-  disabled,
-  isAgain = false,
-}: DrawButtonProps) {
+export function DrawButton({ onClick, disabled, isAgain = false }: DrawButtonProps) {
   const { t } = useI18n();
   const handleClick = () => {
     trackButton("button_draw", { is_again: isAgain });
@@ -24,11 +20,11 @@ export function DrawButton({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="flex items-center justify-center gap-3 rounded-2xl bg-amber-500 px-14 py-5 text-xl font-bold tracking-tight text-zinc-950 shadow-[0_4px_20px_rgba(250,204,21,0.3)] transition hover:bg-amber-400 hover:shadow-[0_6px_24px_rgba(250,204,21,0.35)] focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:shadow-[0_4px_20px_rgba(250,204,21,0.3)]"
+      className="inline-flex items-center justify-center gap-3 rounded-md bg-white px-14 py-4 text-base font-semibold tracking-[0.08em] uppercase text-black shadow-[0_2px_24px_rgba(255,255,255,0.12)] transition hover:bg-white/90 hover:shadow-[0_4px_32px_rgba(255,255,255,0.18)] focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#080808] disabled:cursor-not-allowed disabled:opacity-40"
     >
       {disabled && (
         <span
-          className="h-5 w-5 shrink-0 rounded-full border-2 border-zinc-950/30 border-t-zinc-950 animate-spin-slow"
+          className="h-4 w-4 shrink-0 rounded-full border-2 border-black/20 border-t-black animate-spin-slow"
           aria-hidden
         />
       )}

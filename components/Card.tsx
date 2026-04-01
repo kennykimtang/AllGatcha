@@ -6,59 +6,57 @@ import { useI18n } from "@/components/I18nProvider";
 import { trackButton } from "@/lib/analytics";
 import type { CardCategory, CardRarity, WikiCard } from "@/lib/wikipedia";
 
-// ── Category icons ────────────────────────────────────────────
-const CATEGORY_ICONS: Record<CardCategory, string> = {
-  knowledge: "📚",
-  internet: "🌐",
-  culture: "🎭",
-  science: "🔬",
-  history: "🏛️",
-  art: "🎨",
-  misc: "✦",
+const CATEGORY_LABELS: Partial<Record<CardCategory, string>> = {
+  knowledge: "Knowledge",
+  internet: "Internet",
+  culture: "Culture",
+  science: "Science",
+  history: "History",
+  art: "Art",
+  misc: "Misc",
 };
 
-// ── Rarity design tokens ──────────────────────────────────────
 const RARITY = {
   common: {
-    topBar: "from-slate-500 via-slate-600 to-slate-700",
-    cardBg: "bg-slate-800/95",
-    border: "border border-slate-600/60",
-    shadow: "shadow-lg",
-    metaBadge: "bg-slate-700/80 text-slate-300",
-    label: null,
-    labelColor: "",
-    backBg: "from-slate-800 to-slate-900",
-    backBorder: "border-slate-600/40",
+    topBar: "from-white/10 to-transparent",
+    cardBg: "bg-[#111111]",
+    border: "border border-white/8",
+    shadow: "shadow-lg shadow-black/60",
+    metaBadge: "bg-white/5 text-white/40 ring-1 ring-white/8",
+    label: null as string | null,
+    labelStyle: "",
+    backBg: "from-[#141414] to-[#080808]",
+    backBorder: "border-white/8",
     backSymbol: "?",
-    backSymbolColor: "text-slate-400",
+    backSymbolStyle: "text-white/20 text-5xl",
     revealDelay: 350,
   },
   rare: {
-    topBar: "from-violet-500 via-indigo-500 to-violet-700",
-    cardBg: "bg-[#18152e]/95",
+    topBar: "from-white/30 to-transparent",
+    cardBg: "bg-[#111111]",
     border: "rarity-rare border",
-    shadow: "shadow-xl",
-    metaBadge: "bg-violet-900/70 text-violet-300 ring-1 ring-violet-400/30",
-    label: "✦ RARE",
-    labelColor: "text-violet-400",
-    backBg: "from-violet-950 to-[#0d0b1e]",
-    backBorder: "border-violet-500/40",
-    backSymbol: "✦",
-    backSymbolColor: "text-violet-400",
+    shadow: "shadow-xl shadow-black/70",
+    metaBadge: "bg-white/8 text-white/60 ring-1 ring-white/15",
+    label: "RARE" as string | null,
+    labelStyle: "text-white/50",
+    backBg: "from-[#1a1a1a] to-[#080808]",
+    backBorder: "border-white/20",
+    backSymbol: "R",
+    backSymbolStyle: "text-white/40 text-5xl font-thin tracking-widest",
     revealDelay: 600,
   },
   legendary: {
-    topBar: "from-amber-400 via-yellow-400 to-amber-600",
-    cardBg: "bg-[#1a1406]/95",
+    topBar: "from-white/70 via-white/30 to-transparent",
+    cardBg: "bg-[#111111]",
     border: "rarity-legendary border shimmer-legendary animate-pulse-legendary",
-    shadow: "shadow-2xl",
-    metaBadge: "bg-amber-900/70 text-amber-300 ring-1 ring-amber-400/40",
-    label: "★ LEGENDARY",
-    labelColor: "text-amber-400",
-    backBg: "from-amber-950 to-[#120e00]",
-    backBorder: "border-amber-500/50",
-    backSymbol: "★",
-    backSymbolColor: "text-amber-400",
+    shadow: "shadow-2xl shadow-black/80",
+    metaBadge: "bg-white/10 text-white/80 ring-1 ring-white/25",
+    label: "LEGENDARY" as string | null,
+    labelStyle: "text-white/80",
+    backBg: "from-[#222222] to-[#080808]",
+    backBorder: "border-white/40",
+    backSymbol: "L",
+    backSymbolStyle: "text-white/70 text-5xl font-thin tracking-widest",
     revealDelay: 900,
   },
 } as const;
@@ -88,11 +86,11 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
     art: t("categoryArt"),
     misc: t("categoryMisc"),
   };
-  const categoryLabel = card.category ? (categoryLabels[card.category] ?? "") : "";
-  const categoryIcon = card.category ? CATEGORY_ICONS[card.category] : "✦";
+  const categoryLabel = card.category
+    ? (categoryLabels[card.category] ?? CATEGORY_LABELS[card.category] ?? "")
+    : "";
   const sourceLabel = card.source === "website" ? t("sourceWebsite") : t("sourceWiki");
 
-  // Brief card-back display, then reveal
   useEffect(() => {
     const timer = setTimeout(() => setRevealed(true), cfg.revealDelay);
     return () => clearTimeout(timer);
@@ -103,7 +101,10 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
     onKeep();
   };
   const handleOpenLink = () => {
-    trackButton(card.source === "website" ? "button_open_website" : "button_open_article", { url: card.url });
+    trackButton(
+      card.source === "website" ? "button_open_website" : "button_open_article",
+      { url: card.url }
+    );
   };
   const handleDrawAgain = () => {
     trackButton("button_draw_again");
@@ -113,8 +114,8 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
     trackButton("button_share", { card_title: card.title });
     const text =
       locale === "ko"
-        ? `"${card.title}" 발견! 🎴 AllGatcha에서 뽑았어요 → ${card.url}`
-        : `Just drew "${card.title}" on AllGatcha 🎴 → ${card.url}`;
+        ? `"${card.title}" 발견! AllGatcha에서 뽑았어요 -> ${card.url}`
+        : `Just drew "${card.title}" on AllGatcha -> ${card.url}`;
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({ title: card.title, text, url: card.url });
@@ -130,8 +131,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
 
   return (
     <div className="relative w-full max-w-lg">
-
-      {/* ── Card Back (overlay, fades out on reveal) ─────────── */}
+      {/* Card Back */}
       <div
         aria-hidden
         className={[
@@ -141,30 +141,22 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
           "flex flex-col items-center justify-center gap-3",
           "transition-all duration-500 ease-in-out",
           revealed
-            ? "opacity-0 scale-[1.04] pointer-events-none"
+            ? "opacity-0 scale-[1.03] pointer-events-none"
             : "opacity-100 scale-100",
         ].join(" ")}
       >
-        <span
-          className={[
-            "text-6xl leading-none transition-transform duration-300",
-            !revealed && rarity === "legendary" ? "animate-pulse" : "",
-            cfg.backSymbolColor,
-          ].join(" ")}
-        >
-          {cfg.backSymbol}
-        </span>
-        <span className="text-base font-bold tracking-[0.25em] text-white/40 uppercase">
+        <span className={cfg.backSymbolStyle}>{cfg.backSymbol}</span>
+        <span className="text-xs font-medium tracking-[0.3em] text-white/25 uppercase">
           AllGatcha
         </span>
         {cfg.label && (
-          <span className={`text-xs font-bold tracking-widest uppercase ${cfg.labelColor}`}>
+          <span className={`text-[10px] font-semibold tracking-[0.25em] uppercase ${cfg.labelStyle}`}>
             {cfg.label}
           </span>
         )}
       </div>
 
-      {/* ── Card Front ───────────────────────────────────────── */}
+      {/* Card Front */}
       <article
         className={[
           "w-full overflow-hidden rounded-2xl",
@@ -176,17 +168,16 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
         ].join(" ")}
         role="article"
       >
-        {/* Rarity gradient top bar */}
-        <div className={`h-[3px] w-full bg-gradient-to-r ${cfg.topBar}`} />
+        {/* Rarity top bar */}
+        <div className={`h-[2px] w-full bg-gradient-to-r ${cfg.topBar}`} />
 
-        {/* Image */}
         {showImage && (
-          <figure className="relative aspect-video w-full overflow-hidden bg-slate-700/60">
+          <figure className="relative aspect-video w-full overflow-hidden bg-white/3">
             <Image
               src={card.image as string}
               alt=""
               fill
-              className="object-cover"
+              className="object-cover opacity-90"
               sizes="(max-width: 512px) 100vw, 512px"
               onError={() => setImageError(true)}
             />
@@ -194,36 +185,30 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
         )}
 
         <div className="p-5">
-          {/* Meta row */}
+          {/* Meta */}
           <div className="mb-3 flex flex-wrap items-center gap-1.5">
             {categoryLabel && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-700/50 px-2.5 py-0.5 text-xs font-medium text-slate-300">
-                <span>{categoryIcon}</span>
-                <span>{categoryLabel}</span>
+              <span className={`rounded-sm px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider ${cfg.metaBadge}`}>
+                {categoryLabel}
               </span>
             )}
-            <span
-              className={[
-                "rounded-full px-2.5 py-0.5 text-xs font-medium",
-                cfg.metaBadge,
-              ].join(" ")}
-            >
+            <span className={`rounded-sm px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider ${cfg.metaBadge}`}>
               {sourceLabel}
             </span>
             {cfg.label && (
-              <span className={`ml-auto text-[11px] font-bold tracking-wider ${cfg.labelColor}`}>
+              <span className={`ml-auto text-[10px] font-semibold tracking-[0.2em] uppercase ${cfg.labelStyle}`}>
                 {cfg.label}
               </span>
             )}
           </div>
 
           {/* Title */}
-          <h2 className="mb-2 text-xl font-bold leading-tight tracking-tight text-zinc-100 sm:text-2xl">
+          <h2 className="mb-2.5 text-xl font-semibold leading-tight tracking-tight text-white/90 sm:text-2xl">
             {card.title}
           </h2>
 
           {/* Summary */}
-          <p className="mb-5 line-clamp-4 text-sm leading-relaxed text-slate-400 sm:text-[15px]">
+          <p className="mb-5 line-clamp-4 text-sm leading-relaxed text-white/40 sm:text-[15px]">
             {card.summary}
           </p>
 
@@ -232,7 +217,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
             <button
               type="button"
               onClick={handleKeep}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+              className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#111]"
             >
               {t("keep")}
             </button>
@@ -240,7 +225,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
               href={card.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-lg border border-teal-500/50 px-4 py-2 text-sm font-semibold text-teal-300 transition hover:border-teal-400 hover:bg-teal-500/10 hover:text-teal-200 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+              className="rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white/40 hover:text-white/90 focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-[#111]"
               onClick={handleOpenLink}
             >
               {card.source === "website" ? t("openWebsite") : t("openArticle")}
@@ -248,14 +233,14 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
             <button
               type="button"
               onClick={handleShare}
-              className="rounded-lg border border-slate-500/40 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-400 hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-slate-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+              className="rounded-md border border-white/12 px-4 py-2 text-sm font-semibold text-white/50 transition hover:border-white/25 hover:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/15 focus:ring-offset-2 focus:ring-offset-[#111]"
             >
               {copied ? t("copied") : t("share")}
             </button>
             <button
               type="button"
               onClick={handleDrawAgain}
-              className="rounded-lg border border-slate-600/40 px-4 py-2 text-sm font-semibold text-slate-400 transition hover:border-slate-500 hover:bg-slate-700/40 hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+              className="rounded-md border border-white/8 px-4 py-2 text-sm font-semibold text-white/35 transition hover:border-white/20 hover:text-white/55 focus:outline-none focus:ring-2 focus:ring-white/10 focus:ring-offset-2 focus:ring-offset-[#111]"
             >
               {t("drawAgain")}
             </button>

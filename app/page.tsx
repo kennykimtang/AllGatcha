@@ -61,29 +61,24 @@ export default function HomePage() {
       <Header />
       <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 pt-24 pb-12">
         {!currentCard && !loading && (
-          <div className="flex flex-col items-center gap-8">
-            {/* Fanned card stack preview */}
+          <div className="flex flex-col items-center gap-10">
+            {/* Fanned card stack — monochrome */}
             <div className="relative h-36 w-52" aria-hidden>
-              {/* Legendary (back) */}
-              <div className="absolute left-7 top-5 h-28 w-40 rounded-xl border border-amber-500/30 bg-gradient-to-b from-amber-950/80 to-slate-900/80 shadow-[0_0_18px_rgba(251,191,36,0.18)] rotate-[-8deg]">
-                <div className="flex h-full items-center justify-center text-2xl text-amber-400/70">★</div>
-              </div>
-              {/* Rare (middle) */}
-              <div className="absolute left-3 top-2 h-28 w-40 rounded-xl border border-violet-500/30 bg-gradient-to-b from-violet-950/80 to-slate-900/80 shadow-[0_0_12px_rgba(139,92,246,0.15)] rotate-[-3deg]">
-                <div className="flex h-full items-center justify-center text-2xl text-violet-400/70">✦</div>
-              </div>
-              {/* Common (front) */}
-              <div className="absolute left-0 top-0 h-28 w-40 rounded-xl border border-slate-600/50 bg-gradient-to-b from-slate-800 to-slate-900 shadow-lg">
-                <div className="flex h-full items-center justify-center text-xl font-bold tracking-widest text-slate-500">?</div>
+              <div className="absolute left-8 top-5 h-28 w-40 rounded-xl border border-white/18 bg-gradient-to-b from-white/8 to-transparent shadow-[0_0_24px_rgba(255,255,255,0.05)] rotate-[-8deg]" />
+              <div className="absolute left-3.5 top-2 h-28 w-40 rounded-xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent rotate-[-3deg]" />
+              <div className="absolute left-0 top-0 h-28 w-40 rounded-xl border border-white/8 bg-[#141414] shadow-lg">
+                <div className="flex h-full items-center justify-center text-xs font-medium tracking-[0.3em] uppercase text-white/20">
+                  AllGatcha
+                </div>
               </div>
             </div>
 
             <div className="max-w-xs text-center">
-              <p className="mb-1.5 text-base font-semibold text-slate-100">
+              <p className="mb-2 text-base font-medium text-white/80">
                 {t("intro")}
               </p>
-              <p className="mb-4 text-sm text-slate-400">{t("introSub")}</p>
-              <p className="text-xs text-slate-500">
+              <p className="mb-4 text-sm text-white/35">{t("introSub")}</p>
+              <p className="text-[11px] tracking-wider text-white/20 uppercase">
                 {t("rarityOdds")}
               </p>
             </div>
