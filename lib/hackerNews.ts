@@ -20,21 +20,38 @@ function rarityFromPoints(points: number): "common" | "rare" | "legendary" {
   return "common";
 }
 
+function decodeHtml(html: string): string {
+  return html
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(Number(d)))
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&apos;/g, "'");
+}
+
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return decodeHtml(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
+}
+
+/** Returns true if the text is a personal journey narrative rather than a product description. */
+function isNarrative(text: string): boolean {
+  return /^(i |we |it's been|it has been|after |so i|so we)/i.test(text.trim());
 }
 
 function buildSummary(hit: HNHit, locale: Locale): string {
   if (hit.story_text) {
     const text = stripHtml(hit.story_text);
-    if (text.length > 0) {
+    if (text.length > 30 && !isNarrative(text)) {
       return text.length > 220 ? text.slice(0, 220).replace(/\s\S*$/, "") + "…" : text;
     }
   }
-  // Fallback: link-only post — title is already descriptive, just add HN context
+  // Fallback: use HN stats as context — title already tells the story
   return locale === "ko"
-    ? `HN ${hit.points}pt · 댓글 ${hit.num_comments}개 — 커뮤니티가 검증한 프로젝트입니다.`
-    : `${hit.points} points · ${hit.num_comments} comments on Hacker News.`;
+    ? `HN ${hit.points}pt · 댓글 ${hit.num_comments}개`
+    : `${hit.points} pts · ${hit.num_comments} comments on Hacker News`;
 }
 
 export async function fetchRandomShowHN(locale: Locale): Promise<WikiCard | null> {
