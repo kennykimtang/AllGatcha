@@ -14,6 +14,7 @@ const CATEGORY_LABELS: Partial<Record<CardCategory, string>> = {
   history: "History",
   art: "Art",
   misc: "Misc",
+  indie: "Indie",
 };
 
 const RARITY = {
@@ -85,6 +86,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
     history: t("categoryHistory"),
     art: t("categoryArt"),
     misc: t("categoryMisc"),
+    indie: t("categoryIndie"),
   };
   const categoryLabel = card.category
     ? (categoryLabels[card.category] ?? CATEGORY_LABELS[card.category] ?? "")

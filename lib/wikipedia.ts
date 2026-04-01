@@ -14,7 +14,8 @@ export type CardCategory =
   | "science"
   | "history"
   | "art"
-  | "misc";
+  | "misc"
+  | "indie";
 
 export type CardRarity = "common" | "rare" | "legendary";
 
