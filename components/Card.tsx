@@ -91,7 +91,12 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
   const categoryLabel = card.category
     ? (categoryLabels[card.category] ?? CATEGORY_LABELS[card.category] ?? "")
     : "";
-  const sourceLabel = card.source === "website" ? t("sourceWebsite") : t("sourceWiki");
+  const sourceLabel =
+    card.source === "website"
+      ? t("sourceWebsite")
+      : card.source === "hn"
+      ? t("sourceHN")
+      : t("sourceWiki");
 
   useEffect(() => {
     const timer = setTimeout(() => setRevealed(true), cfg.revealDelay);
@@ -104,7 +109,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
   };
   const handleOpenLink = () => {
     trackButton(
-      card.source === "website" ? "button_open_website" : "button_open_article",
+      card.source === "wiki" ? "button_open_article" : "button_open_website",
       { url: card.url }
     );
   };
@@ -230,7 +235,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
               className="rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white/40 hover:text-white/90 focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-[#111]"
               onClick={handleOpenLink}
             >
-              {card.source === "website" ? t("openWebsite") : t("openArticle")}
+              {card.source === "wiki" ? t("openArticle") : t("openWebsite")}
             </a>
             <button
               type="button"

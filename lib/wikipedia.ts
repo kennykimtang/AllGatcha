@@ -5,7 +5,7 @@ const WIKI_SUMMARY_BASE: Record<Locale, string> = {
   ko: "https://ko.wikipedia.org/api/rest_v1/page/summary",
 };
 
-export type CardSource = "wiki" | "website";
+export type CardSource = "wiki" | "website" | "hn";
 
 export type CardCategory =
   | "knowledge"
@@ -93,15 +93,19 @@ export async function fetchRandomWikiPage(locale: Locale): Promise<WikiCard> {
   throw new Error("Failed to fetch a Wikipedia page");
 }
 
-/** Randomly returns either a Wikipedia card or an interesting-website card (50/50). */
+/** Returns a card from one of three sources: curated sites (34%), live HN Show HN (33%), Wikipedia (33%). */
 export async function fetchRandomCard(locale: Locale): Promise<WikiCard> {
-  const useWebsite = Math.random() < 0.5;
-  if (useWebsite) {
+  const r = Math.random();
+  if (r < 0.34) {
     const { getRandomWebsite } = await import("@/lib/interestingWebsites");
     return getRandomWebsite(locale);
   }
-  const wikiCard = await fetchRandomWikiPage(locale);
-  return wikiCard;
+  if (r < 0.67) {
+    const { fetchRandomShowHN } = await import("@/lib/hackerNews");
+    const card = await fetchRandomShowHN(locale);
+    if (card) return card;
+  }
+  return fetchRandomWikiPage(locale);
 }
 
 const SAVED_CARDS_KEY = "saved_cards";

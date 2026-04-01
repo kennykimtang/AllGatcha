@@ -27,7 +27,7 @@ export function trackView(page: ViewPage): void {
 }
 
 export function trackCardShown(
-  source: "wiki" | "website",
+  source: "wiki" | "website" | "hn",
   title?: string
 ): void {
   if (typeof window !== "undefined" && window.mixpanel) {

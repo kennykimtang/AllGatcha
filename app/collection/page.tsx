@@ -38,7 +38,7 @@ function CardThumbnail({ card }: { card: WikiCard }) {
 export default function CollectionPage() {
   const { t } = useI18n();
   const [cards, setCards] = useState<WikiCard[]>([]);
-  const [sourceFilter, setSourceFilter] = useState<"all" | "wiki" | "website">("all");
+  const [sourceFilter, setSourceFilter] = useState<"all" | "wiki" | "website" | "hn">("all");
   const [sortKey, setSortKey] = useState<"recent" | "oldest" | "title">("recent");
   const [sessionKeeps, setSessionKeeps] = useState(0);
 
@@ -102,6 +102,7 @@ export default function CollectionPage() {
               <button type="button" onClick={() => setSourceFilter("all")} className={filterBtn(sourceFilter === "all")}>{t("filterAll")}</button>
               <button type="button" onClick={() => setSourceFilter("wiki")} className={filterBtn(sourceFilter === "wiki")}>{t("sourceWiki")}</button>
               <button type="button" onClick={() => setSourceFilter("website")} className={filterBtn(sourceFilter === "website")}>{t("sourceWebsite")}</button>
+              <button type="button" onClick={() => setSourceFilter("hn")} className={filterBtn(sourceFilter === "hn")}>{t("sourceHN")}</button>
             </div>
 
             <select
