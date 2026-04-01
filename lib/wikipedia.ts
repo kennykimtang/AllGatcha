@@ -38,6 +38,13 @@ interface WikiSummaryResponse {
   content_urls?: { desktop?: { page?: string } };
 }
 
+function assignRarity(): CardRarity {
+  const r = Math.random();
+  if (r < 0.05) return "legendary";
+  if (r < 0.25) return "rare";
+  return "common";
+}
+
 function parseSummaryResponse(
   data: WikiSummaryResponse,
   wikiBase: string,
@@ -55,7 +62,7 @@ function parseSummaryResponse(
     source: "wiki",
     language: locale,
     category: "knowledge",
-    rarity: "common",
+    rarity: assignRarity(),
   };
 }
 

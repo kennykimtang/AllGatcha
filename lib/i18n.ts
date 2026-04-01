@@ -41,6 +41,7 @@ export const translations = {
     drawsToday: " draws today",
     collectionRare: "rare",
     collectionLegendary: "legendary",
+    rarityOdds: "Common 75% · Rare 20% · Legendary 5%",
   },
   ko: {
     draw: "뽑기",
@@ -82,6 +83,7 @@ export const translations = {
     drawsToday: "회 뽑음",
     collectionRare: "레어",
     collectionLegendary: "레전더리",
+    rarityOdds: "일반 75% · 레어 20% · 레전더리 5%",
   },
 } as const;
 

@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={notoSansKr.variable}>
-      <body className="min-h-screen bg-gradient-diagonal bg-noise text-zinc-100 antialiased font-sans">
+      <body className="min-h-screen bg-gradient-diagonal bg-dot-grid bg-noise text-zinc-100 antialiased font-sans">
         <svg aria-hidden="true" className="absolute size-0 overflow-hidden" focusable="false">
           <defs>
             <filter id="noiseFilter" x="0" y="0">
