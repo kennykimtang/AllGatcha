@@ -31,10 +31,10 @@ function buildSummary(hit: HNHit, locale: Locale): string {
       return text.length > 220 ? text.slice(0, 220).replace(/\s\S*$/, "") + "…" : text;
     }
   }
-  // Fallback when author left no description
+  // Fallback: link-only post — title is already descriptive, just add HN context
   return locale === "ko"
-    ? `해커뉴스에서 ${hit.points}포인트, ${hit.num_comments}개의 댓글을 받은 프로젝트입니다.`
-    : `Shared on Hacker News with ${hit.points} points and ${hit.num_comments} comments.`;
+    ? `HN ${hit.points}pt · 댓글 ${hit.num_comments}개 — 커뮤니티가 검증한 프로젝트입니다.`
+    : `${hit.points} points · ${hit.num_comments} comments on Hacker News.`;
 }
 
 export async function fetchRandomShowHN(locale: Locale): Promise<WikiCard | null> {
