@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useI18n } from "@/components/I18nProvider";
 import { trackButton } from "@/lib/analytics";
@@ -74,6 +74,10 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
   const [copied, setCopied] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
   const rarity: CardRarity = card.rarity ?? "common";
   const cfg = RARITY[rarity];
   const showImage = card.image && !imageError;
@@ -117,6 +121,29 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
     trackButton("button_draw_again");
     onDrawAgain();
   };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!revealed) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const rotateX = ((e.clientY - rect.top) / rect.height - 0.5) * -22;
+    const rotateY = ((e.clientX - rect.left) / rect.width - 0.5) * 22;
+    setTilt({ x: rotateX, y: rotateY });
+  };
+  const handleMouseEnter = () => { if (revealed) setIsHovering(true); };
+  const handleMouseLeave = () => { setTilt({ x: 0, y: 0 }); setIsHovering(false); };
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!revealed || !e.touches[0]) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const rotateX = ((e.touches[0].clientY - rect.top) / rect.height - 0.5) * -22;
+    const rotateY = ((e.touches[0].clientX - rect.left) / rect.width - 0.5) * 22;
+    setTilt({ x: rotateX, y: rotateY });
+    setIsHovering(true);
+  };
+  const handleTouchEnd = () => { setTilt({ x: 0, y: 0 }); setIsHovering(false); };
+
   const handleShare = async () => {
     trackButton("button_share", { card_title: card.title });
     const text =
@@ -137,7 +164,20 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
   };
 
   return (
-    <div className="relative w-full max-w-lg">
+    <div
+      ref={wrapperRef}
+      className="relative w-full max-w-lg"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{
+        transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${isHovering ? 1.02 : 1})`,
+        transition: isHovering ? "transform 0.08s linear" : "transform 0.5s ease-out",
+        willChange: "transform",
+      }}
+    >
       {/* Card Back */}
       <div
         aria-hidden
@@ -166,7 +206,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
       {/* Card Front */}
       <article
         className={[
-          "w-full overflow-hidden rounded-2xl",
+          "relative w-full overflow-hidden rounded-2xl",
           cfg.cardBg,
           cfg.border,
           cfg.shadow,
@@ -175,6 +215,17 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
         ].join(" ")}
         role="article"
       >
+        {/* Glare */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{
+            opacity: isHovering ? 1 : 0,
+            transition: isHovering ? "none" : "opacity 0.5s ease-out",
+            background: `radial-gradient(circle at ${50 + (tilt.y / 22) * 40}% ${50 + (-tilt.x / 22) * 40}%, rgba(255,255,255,0.07) 0%, transparent 60%)`,
+          }}
+        />
+
         {/* Rarity top bar */}
         <div className={`h-[2px] w-full bg-gradient-to-r ${cfg.topBar}`} />
 
