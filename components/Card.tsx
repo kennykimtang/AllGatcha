@@ -307,15 +307,18 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
           </div>
 
           {kept && (
-            <a
-              href="https://ko-fi.com/kennytang"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 block text-center text-xs text-white/20 transition hover:text-white/50"
-              onClick={() => trackButton("button_support")}
-            >
-              {t("supportDev")}
-            </a>
+            <div className="mt-4 flex items-center justify-between rounded-md border border-white/10 bg-white/3 px-3.5 py-2.5">
+              <p className="text-xs text-white/40">{t("supportDev")}</p>
+              <a
+                href="https://ko-fi.com/kennytang"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-3 shrink-0 rounded-sm border border-white/20 bg-white/8 px-2.5 py-1 text-[11px] font-medium text-white/65 transition hover:border-white/40 hover:bg-white/15 hover:text-white/90"
+                onClick={() => trackButton("button_support")}
+              >
+                {t("supportLabel")}
+              </a>
+            </div>
           )}
         </div>
       </article>
