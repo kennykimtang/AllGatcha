@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
-const isNetlify = process.env.NETLIFY === "true";
+// Only GitHub Pages needs the /AllGatcha basePath.
+// Netlify (and local dev) serves from root.
+const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
 
 const nextConfig: NextConfig = {
   output: "export",
-  // Netlify: serve at root. GitHub Pages: serve at /AllGatcha
-  basePath: isNetlify ? "" : isProd ? "/AllGatcha" : undefined,
-  assetPrefix: isNetlify ? "" : isProd ? "/AllGatcha" : undefined,
+  basePath: isGitHubPages ? "/AllGatcha" : undefined,
+  assetPrefix: isGitHubPages ? "/AllGatcha" : undefined,
   images: {
     unoptimized: true,
     remotePatterns: [
