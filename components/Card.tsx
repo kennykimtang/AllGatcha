@@ -73,6 +73,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
   const [imageError, setImageError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [kept, setKept] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -109,6 +110,7 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
 
   const handleKeep = () => {
     trackButton("button_keep", { card_source: card.source ?? "wiki", card_title: card.title });
+    setKept(true);
     onKeep();
   };
   const handleOpenLink = () => {
@@ -303,6 +305,18 @@ export function Card({ card, onKeep, onDrawAgain }: CardProps) {
               {t("drawAgain")}
             </button>
           </div>
+
+          {kept && (
+            <a
+              href="https://ko-fi.com/kennytang"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 block text-center text-xs text-white/20 transition hover:text-white/50"
+              onClick={() => trackButton("button_support")}
+            >
+              {t("supportDev")}
+            </a>
+          )}
         </div>
       </article>
     </div>

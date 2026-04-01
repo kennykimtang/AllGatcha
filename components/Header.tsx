@@ -58,7 +58,16 @@ export function Header() {
         )}
       </div>
 
-      <nav>
+      <nav className="flex items-center gap-4">
+        <a
+          href="https://ko-fi.com/kennytang"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden sm:inline text-xs font-medium text-white/25 transition hover:text-white/55 focus:outline-none"
+          onClick={() => trackButton("button_support")}
+        >
+          {locale === "ko" ? "후원" : "Support"}
+        </a>
         {isCollection ? (
           <Link
             href="/"

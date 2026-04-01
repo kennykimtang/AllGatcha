@@ -44,6 +44,7 @@ export const translations = {
     collectionRare: "rare",
     collectionLegendary: "legendary",
     rarityOdds: "Common 75% · Rare 20% · Legendary 5%",
+    supportDev: "Enjoying AllGatcha? Support the developer",
   },
   ko: {
     draw: "뽑기",
@@ -88,6 +89,7 @@ export const translations = {
     collectionRare: "레어",
     collectionLegendary: "레전더리",
     rarityOdds: "일반 75% · 레어 20% · 레전더리 5%",
+    supportDev: "AllGatcha가 마음에 드셨나요? 개발자 후원하기",
   },
 } as const;
 
